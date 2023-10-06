@@ -1,8 +1,5 @@
-import pandas as pd
-import numpy as np
 from random import randint
 from pymongo import MongoClient
-import json
 
 import unicodedata
 
@@ -53,23 +50,9 @@ def generate(ThisId):
     nombres_value1 = randint(0, 39)
     nombres_value2 = randint(0, 39)
     nombres_value3 = randint(20, 39)
-    nombres_value4 = randint(20, 39)
-    nombres_value5 = randint(0, 18)
-    nombres_value6 = randint(0, 18)
-    nombres_value7 = randint(0, 39)
-    nombres_value8 = randint(0, 39)
-    nombres_value9 = randint(20, 39)
-    nombres_value10 = randint(20, 39)
 
     apellidos_value1 = randint(0, 99)
     apellidos_value2 = randint(0, 99)
-    apellidos_value3 = randint(0, 99)
-    apellidos_value4 = randint(0, 99)
-    apellidos_value5 = randint(0, 99)
-    apellidos_value6 = randint(0, 99)
-    apellidos_value7 = randint(0, 99)
-    apellidos_value8 = randint(0, 99)
-    apellidos_value9 = randint(0, 99)
 
     return {
         'rut': genRut(),
@@ -120,9 +103,7 @@ def get_database():
    return mydb
 
 
-def main():
-    #createSuperUser()
-    
+def populateDB():
     y_how_many = 3
     y_value = 0
     dbname = get_database()
@@ -167,5 +148,10 @@ def main():
 
     
     print("done!")
+
+def main():
+    #createSuperUser()
+    populateDB()
+    
 
 main()
