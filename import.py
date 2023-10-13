@@ -86,7 +86,7 @@ def createSuperUser():
         "rol": "*",
     }
     user = dbname["usuarios"].insert_one(defaultuser)
-    print("Se ha creado el superusuario en la id: "+user.inserted_id)
+    print("Se ha creado el superusuario en la id: "+str(user.inserted_id))
 
 
 def get_database():
