@@ -150,7 +150,7 @@ def populateDB():
     print("done!")
 
 def main():
-    #createSuperUser()
+    createSuperUser()
     populateDB()
     
 
