@@ -11,6 +11,11 @@ const jwt = require('jsonwebtoken');
 setPersonHistoryInfo.post("/setPersonHistoryInfo", async (req,res) =>{
     const data = req.body
 
+    req.headers.cookie = req.headers.cookie
+    ?.split(";")
+    .filter((c) => !c.trim().startsWith("__next_hmr_refresh_hash__="))
+    .join(";");
+
     const [name, token] = req.header('cookie').trim().split('=');
     const {uuid} = jwt.verify(
         token,
@@ -37,6 +42,7 @@ setPersonHistoryInfo.post("/setPersonHistoryInfo", async (req,res) =>{
         });
     }
     catch (e) {
+        console.error(e)
         return res.status(200).json({
             status: 'failed',
             data: {

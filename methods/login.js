@@ -16,6 +16,7 @@ const incorrectPass = (res) => {
 }
 
 login.post("/login", async (req,res) =>{
+    console.log(req)
 
     const userData = req.body;
     var validation = false;

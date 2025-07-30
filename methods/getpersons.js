@@ -17,6 +17,11 @@ getPersons.get("/getPersons", async (req,res) =>{
     let nameRegex = new RegExp(texto);
     var documents = "";
 
+    req.headers.cookie = req.headers.cookie
+    ?.split(";")
+    .filter((c) => !c.trim().startsWith("__next_hmr_refresh_hash__="))
+    .join(";");
+
     const [name, token] = req.header('cookie').trim().split('=');
     const {uuid} = jwt.verify(
         token,

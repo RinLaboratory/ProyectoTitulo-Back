@@ -5,6 +5,11 @@ const jwt = require('jsonwebtoken');
 
 exports.protect = catchAsync(async (req, res, next) => {
     // 1) Getting token and check of it's there
+    req.headers.cookie = req.headers.cookie
+    ?.split(";")
+    .filter((c) => !c.trim().startsWith("__next_hmr_refresh_hash__="))
+    .join(";");
+
     const [name, token] = req.header('cookie').trim().split('=');
     const {uuid} = jwt.verify(
         token,
