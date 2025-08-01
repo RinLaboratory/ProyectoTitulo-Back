@@ -66,7 +66,7 @@ export const ImportExcelSchema = z.object({
       (value) => {
         return /^data:.*;base64,/.test(value);
       },
-      { message: "Invalid base64 format." }
+      { message: "Invalid base64 format." },
     )
     .transform((base64) => {
       const { blob, mimeType } = decodeBase64(base64);
@@ -82,7 +82,7 @@ export const ImportExcelSchema = z.object({
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       {
         message: 'Only Excel format ("xlsx") is accepted.',
-      }
+      },
     ),
 });
 

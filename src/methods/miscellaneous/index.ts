@@ -29,7 +29,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        })
+        }),
       );
     }
 
@@ -43,7 +43,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        })
+        }),
       );
     }
 
@@ -60,7 +60,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        })
+        }),
       );
     }
 
