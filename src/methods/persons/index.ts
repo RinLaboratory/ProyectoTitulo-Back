@@ -47,26 +47,15 @@ export async function getPersons(
   const nameRegex = new RegExp(normalizedName);
 
   try {
-    const _defaultArea = await areasModel.findOne({ value: "default" });
-    const defaultArea = await AreaSchema.parseAsync({
-      ..._defaultArea?.toJSON(),
-      _id: _defaultArea?._id.toString(),
-    });
-
-    let queryFilters = {};
+    const queryFilters: object = {
+      ...(normalizedName
+        ? { $or: [{ nameE: nameRegex }, { lastnameE: nameRegex }] }
+        : {}),
+      ...(areaId ? { $and: [{ areaId }] } : {}),
+    };
     let queryLimit = 30;
 
-    if (areaId === defaultArea._id) {
-      if (normalizedName !== "") {
-        queryFilters = {
-          $or: [{ nameE: nameRegex }, { lastnameE: nameRegex }],
-        };
-      }
-    } else {
-      queryFilters = {
-        $or: [{ nameE: nameRegex }, { lastnameE: nameRegex }],
-        $and: [{ areaId }],
-      };
+    if (areaId !== "" || normalizedName !== "") {
       queryLimit = Number.MAX_SAFE_INTEGER;
     }
 
@@ -122,11 +111,10 @@ export async function addPerson(
 
 export async function addImportPersons(
   input: unknown,
-): Promise<ServerResult<{ status: "ok" }>> {
+): Promise<ServerResult<{ rows: number }>> {
   const { file } = await ImportExcelSchema.parseAsync(input);
-
   try {
-    const workbook = XLSX.read(file, { type: "buffer" });
+    const workbook = XLSX.read(await file.arrayBuffer(), { type: "buffer" });
     const firstSheet = workbook.SheetNames[0];
     if (!firstSheet) {
       return { success: false, msg: "excel does not have valid sheets" };
@@ -193,7 +181,7 @@ export async function addImportPersons(
 
     await personsModel.insertMany(newPersons);
 
-    return { success: true, data: { status: "ok" } };
+    return { success: true, data: { rows: newPersons.length } };
   } catch {
     return { success: false, msg: "failed to import excel into database" };
   }
@@ -233,11 +221,11 @@ export async function editPerson(
 
 export async function editImportPersons(
   input: unknown,
-): Promise<ServerResult<{ status: "ok" }>> {
+): Promise<ServerResult<{ rows: number }>> {
   const { file } = await ImportExcelSchema.parseAsync(input);
 
   try {
-    const workbook = XLSX.read(file, { type: "buffer" });
+    const workbook = XLSX.read(await file.arrayBuffer(), { type: "buffer" });
     const firstSheet = workbook.SheetNames[0];
     if (!firstSheet) {
       return { success: false, msg: "excel does not have valid sheets" };
@@ -341,7 +329,7 @@ export async function editImportPersons(
       await existingPerson.updateOne(person);
     }
 
-    return { success: true, data: { status: "ok" } };
+    return { success: true, data: { rows: updatedPersons.length } };
   } catch {
     return { success: false, msg: "failed to import excel into database" };
   }

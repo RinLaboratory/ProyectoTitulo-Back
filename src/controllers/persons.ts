@@ -7,7 +7,7 @@ export async function getPerson(
   res: Response,
   _next: NextFunction,
 ) {
-  const response = await personsMethod.getPerson({ ...req.query });
+  const response = await personsMethod.getPerson({ personId: req.params.id });
   if (response.success) {
     return res.status(200).json(response.data);
   } else {
@@ -46,7 +46,7 @@ export async function addImportPersons(
   res: Response,
   _next: NextFunction,
 ) {
-  const response = await personsMethod.addImportPersons({ ...req.files });
+  const response = await personsMethod.addImportPersons({ ...req.body });
   if (response.success) {
     return res.status(200).json(response.data);
   } else {
@@ -72,7 +72,7 @@ export async function editImportPersons(
   res: Response,
   _next: NextFunction,
 ) {
-  const response = await personsMethod.editImportPersons({ ...req.files });
+  const response = await personsMethod.editImportPersons({ ...req.body });
   if (response.success) {
     return res.status(200).json(response.data);
   } else {
