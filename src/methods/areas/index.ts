@@ -1,17 +1,18 @@
+import type { TArea } from "~/utils/db";
 import {
   AreaSchema,
   areasModel,
   InsertAreaSchema,
   personsModel,
-  TArea,
 } from "~/utils/db";
 import { normalizeString } from "~/utils/normalize-string";
-import { GetAreasSchema, ServerResult } from "~/utils/validators";
+import type { ServerResult } from "~/utils/validators";
+import { GetAreasSchema } from "~/utils/validators";
 
 export async function getAreas(input: unknown): Promise<ServerResult<TArea[]>> {
   const { name } = await GetAreasSchema.parseAsync(input);
   const normalizedName = normalizeString(name);
-  let nameRegex = new RegExp(normalizedName);
+  const nameRegex = new RegExp(normalizedName);
 
   try {
     const areas = await areasModel.find({ value: nameRegex }).then((value) => {
@@ -24,7 +25,7 @@ export async function getAreas(input: unknown): Promise<ServerResult<TArea[]>> {
     });
 
     return { success: true, data: areas };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to fetch database query" };
   }
 }
@@ -54,7 +55,7 @@ export async function addArea(input: unknown): Promise<ServerResult<TArea>> {
       nextId: defaultArea._id === newArea.nextId ? "" : newArea.nextId,
     };
 
-    var insertedArea = new areasModel(filteredData);
+    const insertedArea = new areasModel(filteredData);
     await insertedArea.save();
 
     return {
@@ -64,7 +65,7 @@ export async function addArea(input: unknown): Promise<ServerResult<TArea>> {
         _id: insertedArea._id.toString(),
       }),
     };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to insert new area" };
   }
 }
@@ -117,7 +118,7 @@ export async function editArea(input: unknown): Promise<ServerResult<TArea>> {
     await areaToUpdate.updateOne(filteredData);
 
     return { success: true, data: filteredData };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to update area" };
   }
 }
@@ -143,7 +144,7 @@ export async function deleteArea(input: unknown): Promise<ServerResult<TArea>> {
     await areasModel.deleteOne({ _id: markedArea._id });
 
     return { success: true, data: markedArea };
-  } catch (e) {
+  } catch {
     return {
       success: false,
       msg: "failed to delete area",

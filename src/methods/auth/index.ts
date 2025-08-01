@@ -1,15 +1,15 @@
 import { env } from "~/env";
 import bcrypt from "bcrypt";
 import { JsonWebTokenSign } from "~/utils/sign-jwt";
+import type { ServerResult } from "~/utils/validators/miscellaneous";
 import {
   loginSchema,
-  ServerResult,
   UpdatePasswordSchema,
 } from "~/utils/validators/miscellaneous";
+import type { TSafeUser } from "~/utils/db";
 import {
   InsertUserSchema,
   passwordsModel,
-  TSafeUser,
   UserSchema,
   usersModel,
 } from "~/utils/db";
@@ -23,7 +23,7 @@ export async function login(input: unknown): Promise<
   }>
 > {
   const loginData = await loginSchema.parseAsync(input);
-  var validation = false;
+  let validation = false;
 
   // buscamos los usuarios que coincidan con el correo colocado
   const user = await usersModel.findOne({ email: loginData.email });
@@ -49,12 +49,12 @@ export async function login(input: unknown): Promise<
       const token = await JsonWebTokenSign(
         userData._id.toString(),
         userData.email,
-        userData.rol
+        userData.rol,
       );
 
       const cookieOptions = {
         expires: new Date(
-          Date.now() + env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+          Date.now() + env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
         ),
         httpOnly: true,
       };
@@ -70,7 +70,7 @@ export async function login(input: unknown): Promise<
 }
 
 export async function changePassword(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<{ status: "ok" }>> {
   const { password, userId } = await UpdatePasswordSchema.parseAsync(input);
 
@@ -97,7 +97,7 @@ export async function changePassword(
 
 // admin function
 export async function register(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TSafeUser>> {
   const registerData = await InsertUserSchema.parseAsync(input);
 
@@ -110,15 +110,15 @@ export async function register(
   const insertedUser: TSafeUser[] = [];
 
   bcrypt.hash(registerData.password, saltRounds, async function (err, hash) {
-    let pass = new passwordsModel({ password: hash });
+    const pass = new passwordsModel({ password: hash });
     await pass.save();
 
-    let b_username = registerData.username
+    const b_username = registerData.username
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
 
-    let hashedUserPassword = {
+    const hashedUserPassword = {
       username: registerData.username,
       usernameE: b_username,
       rol: "user",
@@ -126,14 +126,14 @@ export async function register(
       password_id: pass._id.toString(),
     };
 
-    let user = await new usersModel(hashedUserPassword).save();
+    const user = await new usersModel(hashedUserPassword).save();
     await user.save();
 
     insertedUser.push(
       await UserSchema.parseAsync({
         ...user.toJSON(),
         _id: user._id.toString(),
-      })
+      }),
     );
   });
   if (!insertedUser[0]) {

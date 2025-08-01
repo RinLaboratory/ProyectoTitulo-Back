@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import http from "http";
 import express from "express";
 import mongoSanitize from "express-mongo-sanitize";
@@ -9,10 +10,10 @@ import appRouter from "./routes";
 import mongoose from "mongoose";
 import { env } from "./env";
 
-export function createExpressApp() {
+export async function createExpressApp() {
   const app = express();
   const server = http.createServer(app);
-  mongoose.connect(env.DB_ADDRESS);
+  await mongoose.connect(env.DB_ADDRESS);
 
   app.use(fileupload());
 

@@ -1,13 +1,10 @@
-import {
-  historiesModel,
-  HistorySchema,
-  InsertHistorySchema,
-  THistory,
-} from "~/utils/db";
-import { PersonIdSchema, idSchema, ServerResult } from "~/utils/validators";
+import type { THistory } from "~/utils/db";
+import { historiesModel, HistorySchema, InsertHistorySchema } from "~/utils/db";
+import type { ServerResult } from "~/utils/validators";
+import { PersonIdSchema, idSchema } from "~/utils/validators";
 
 export async function getPersonHistoryInfo(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<THistory[]>> {
   const { personId } = await PersonIdSchema.parseAsync(input);
   try {
@@ -19,18 +16,18 @@ export async function getPersonHistoryInfo(
           HistorySchema.parse({
             ...history.toJSON(),
             _id: history._id.toString(),
-          })
-        )
+          }),
+        ),
       );
 
     return { success: true, data: histories };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to query histories" };
   }
 }
 
 export async function addPersonHistoryInfo(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<THistory>> {
   const newHistory = await InsertHistorySchema.parseAsync(input);
 
@@ -52,7 +49,7 @@ export async function addPersonHistoryInfo(
 }
 
 export async function editPersonHistoryInfo(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<THistory>> {
   const updatedHistory = await HistorySchema.parseAsync(input);
 
@@ -72,7 +69,7 @@ export async function editPersonHistoryInfo(
 }
 
 export async function deletePersonHistoryInfo(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<THistory>> {
   const { _id } = await idSchema.parseAsync(input);
 
@@ -91,7 +88,7 @@ export async function deletePersonHistoryInfo(
         _id: existingHistory._id.toString(),
       }),
     };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to delete history from database" };
   }
 }

@@ -1,5 +1,5 @@
 import cors from "cors";
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { env } from "~/env";
 
 export default function corsMiddleware() {

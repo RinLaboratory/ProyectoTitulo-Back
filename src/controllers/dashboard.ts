@@ -5,7 +5,7 @@ import * as miscMethod from "../methods/miscellaneous";
 export async function dashboard(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await miscMethod.dashboard();
   if (response.success) {

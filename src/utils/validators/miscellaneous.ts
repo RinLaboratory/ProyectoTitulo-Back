@@ -1,5 +1,5 @@
 import z from "zod";
-import { TArea, TPerson } from "../db";
+import type { TArea, TPerson } from "../db";
 
 export type ServerResult<T> =
   | {
@@ -66,7 +66,7 @@ export const ImportExcelSchema = z.object({
       (file) =>
         file.type ===
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      'only excel format ("xlsx") is accepted'
+      'only excel format ("xlsx") is accepted',
     ),
 });
 

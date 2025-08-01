@@ -5,7 +5,7 @@ import * as miscMethod from "../methods/miscellaneous";
 export async function initNewYear(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await miscMethod.initNewYear();
   if (response.success) {

@@ -5,7 +5,7 @@ import * as historiesMethod from "../methods/histories";
 export async function getPersonHistoryInfo(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await historiesMethod.getPersonHistoryInfo({
     ...req.query,
@@ -20,7 +20,7 @@ export async function getPersonHistoryInfo(
 export async function addPersonHistoryInfo(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await historiesMethod.addPersonHistoryInfo({
     ...req.body,
@@ -35,7 +35,7 @@ export async function addPersonHistoryInfo(
 export async function editPersonHistoryInfo(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await historiesMethod.editPersonHistoryInfo({
     ...req.body,
@@ -50,7 +50,7 @@ export async function editPersonHistoryInfo(
 export async function deletePersonHistoryInfo(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await historiesMethod.deletePersonHistoryInfo({
     ...req.body,

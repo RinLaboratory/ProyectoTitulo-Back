@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 import { env } from "~/env";
-import { TDurationString } from "./validators";
+import type { TDurationString } from "./validators";
 
 export function JsonWebTokenSign(
   uuid: string,
   email: string,
-  rol: string
+  rol: string,
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     const payload = { uuid, email, rol };
@@ -17,11 +17,11 @@ export function JsonWebTokenSign(
       (err, token) => {
         if (err || !token) {
           console.warn(err);
-          reject("Error interno");
+          reject(new Error("Error interno"));
           if (!token) throw new Error("Invalid token");
         }
         resolve(token);
-      }
+      },
     );
   });
 }

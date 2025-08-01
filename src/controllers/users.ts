@@ -5,7 +5,7 @@ import * as usersMethod from "../methods/users";
 export async function getCurrentUser(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await usersMethod.getCurrentUser({ _id: req.user?.id });
   if (response.success) {
@@ -18,7 +18,7 @@ export async function getCurrentUser(
 export async function getUsers(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await usersMethod.getUsers({ ...req.query });
   if (response.success) {
@@ -31,7 +31,7 @@ export async function getUsers(
 export async function editUser(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await usersMethod.editUser({ ...req.body });
   if (response.success) {
@@ -44,11 +44,11 @@ export async function editUser(
 export async function deleteUser(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await usersMethod.deleteUser(
     { ...req.body },
-    { _id: req.user?.id }
+    { _id: req.user?.id },
   );
   if (response.success) {
     return res.status(200).json(response.data);

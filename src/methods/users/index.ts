@@ -1,19 +1,20 @@
 import { env } from "~/env";
+import type { TSafeUser } from "~/utils/db";
 import {
   passwordsModel,
-  TSafeUser,
   UpdateUserSchema,
   UserSchema,
   usersModel,
 } from "~/utils/db";
 import { normalizeString } from "~/utils/normalize-string";
-import { GetUsersSchema, idSchema, ServerResult } from "~/utils/validators";
+import type { ServerResult } from "~/utils/validators";
+import { GetUsersSchema, idSchema } from "~/utils/validators";
 import bcrypt from "bcrypt";
 
 const saltRounds = env.HOW_MANY_HASHES;
 
 export async function getCurrentUser(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TSafeUser>> {
   const { _id } = await idSchema.parseAsync(input);
 
@@ -30,11 +31,11 @@ export async function getCurrentUser(
 
 // admin
 export async function getUsers(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TSafeUser[]>> {
   const { username } = await GetUsersSchema.parseAsync(input);
   const normalizedUsername = normalizeString(username);
-  let nameRegex = new RegExp(normalizedUsername);
+  const nameRegex = new RegExp(normalizedUsername);
 
   const users = await usersModel
     .find({
@@ -42,8 +43,8 @@ export async function getUsers(
     })
     .then((value) =>
       value.map((user) =>
-        UserSchema.parse({ ...user.toJSON(), _id: user._id.toString() })
-      )
+        UserSchema.parse({ ...user.toJSON(), _id: user._id.toString() }),
+      ),
     );
 
   return { success: true, data: users };
@@ -51,7 +52,7 @@ export async function getUsers(
 
 // admin
 export async function editUser(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TSafeUser>> {
   const updatedUser = await UpdateUserSchema.parseAsync(input);
   try {
@@ -91,7 +92,7 @@ export async function editUser(
         _id: existingUser._id.toString(),
       }),
     };
-  } catch (e) {
+  } catch {
     return {
       success: false,
       msg: "failed to update user",
@@ -102,7 +103,7 @@ export async function editUser(
 // admin
 export async function deleteUser(
   input: unknown,
-  userData: unknown
+  userData: unknown,
 ): Promise<ServerResult<TSafeUser>> {
   const markedUser = await UserSchema.parseAsync(input);
   const { _id: currentUserId } = await idSchema.parseAsync(userData);
@@ -121,7 +122,7 @@ export async function deleteUser(
     await passwordsModel.deleteOne({ _id: markedUser.password_id });
 
     return { success: true, data: markedUser };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to delete user from database" };
   }
 }

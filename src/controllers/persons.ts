@@ -5,7 +5,7 @@ import * as personsMethod from "../methods/persons";
 export async function getPerson(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await personsMethod.getPerson({ ...req.query });
   if (response.success) {
@@ -18,7 +18,7 @@ export async function getPerson(
 export async function getPersons(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await personsMethod.getPersons({ ...req.query });
   if (response.success) {
@@ -31,7 +31,7 @@ export async function getPersons(
 export async function addPerson(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await personsMethod.addPerson({ ...req.body });
   if (response.success) {
@@ -44,7 +44,7 @@ export async function addPerson(
 export async function addImportPersons(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await personsMethod.addImportPersons({ ...req.files });
   if (response.success) {
@@ -57,7 +57,7 @@ export async function addImportPersons(
 export async function editPerson(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await personsMethod.editPerson({ ...req.body });
   if (response.success) {
@@ -70,7 +70,7 @@ export async function editPerson(
 export async function editImportPersons(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await personsMethod.editImportPersons({ ...req.files });
   if (response.success) {
@@ -83,7 +83,7 @@ export async function editImportPersons(
 export async function deletePerson(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await personsMethod.deletePerson({ ...req.body });
   if (response.success) {

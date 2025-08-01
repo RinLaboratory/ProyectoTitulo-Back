@@ -2,12 +2,12 @@ import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "~/env";
 import { UserSchema, usersModel } from "~/utils/db";
-import { TDecodedToken } from "~/utils/validators";
+import type { TDecodedToken } from "~/utils/validators";
 
 export async function authenticationMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const cookie = req.headers.cookie
     ?.split(";")
@@ -15,7 +15,7 @@ export async function authenticationMiddleware(
     .join(";");
 
   if (cookie) {
-    const [name, token] = cookie.trim().split("=");
+    const [_name, token] = cookie.trim().split("=");
     if (!token) return res.status(401).send("unauthorized");
 
     const { uuid } = jwt.verify(token, env.SECRET_JWT_SEED) as TDecodedToken;

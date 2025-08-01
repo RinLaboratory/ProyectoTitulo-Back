@@ -4,10 +4,8 @@ import {
   historiesModel,
   PersonSchema,
   personsModel,
-  TArea,
-  TPerson,
 } from "~/utils/db";
-import { ServerResult, DashboardResponse } from "~/utils/validators";
+import type { ServerResult, DashboardResponse } from "~/utils/validators";
 
 export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
   try {
@@ -26,15 +24,13 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
 
     const atendido = [];
 
-    for (let index = 0; index < atendidoDocuments.length; index++) {
-      const person = await personsModel.findById(
-        atendidoDocuments[index]?.personId
-      );
+    for (const atendidoDocument of atendidoDocuments) {
+      const person = await personsModel.findById(atendidoDocument.personId);
       atendido.push(
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        })
+        }),
       );
     }
 
@@ -42,15 +38,13 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
 
     const reposo = [];
 
-    for (let index = 0; index < reposoDocuments.length; index++) {
-      const person = await personsModel.findById(
-        reposoDocuments[index]?.personId
-      );
+    for (const reposoDocument of reposoDocuments) {
+      const person = await personsModel.findById(reposoDocument.personId);
       reposo.push(
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        })
+        }),
       );
     }
 
@@ -61,15 +55,13 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
 
     const retirado = [];
 
-    for (let index = 0; index < retiradoDocuments.length; index++) {
-      const person = await personsModel.findById(
-        retiradoDocuments[index]?.personId
-      );
+    for (const retiradoDocument of retiradoDocuments) {
+      const person = await personsModel.findById(retiradoDocument.personId);
       retirado.push(
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        })
+        }),
       );
     }
 
@@ -77,8 +69,8 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
       .find({})
       .then((value) =>
         value.map((area) =>
-          AreaSchema.parse({ ...area.toJSON(), _id: area._id.toString() })
-        )
+          AreaSchema.parse({ ...area.toJSON(), _id: area._id.toString() }),
+        ),
       );
 
     return {
@@ -114,7 +106,7 @@ export async function initNewYear(): Promise<ServerResult<{ status: "ok" }>> {
     }
 
     return { success: true, data: { status: "ok" } };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to init new year" };
   }
 }

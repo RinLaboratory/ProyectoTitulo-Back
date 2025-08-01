@@ -20,7 +20,7 @@ export async function login(req: Request, res: Response, _next: NextFunction) {
 export async function changePassword(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await authMethod.changePassword({
     ...req.body,
@@ -36,7 +36,7 @@ export async function changePassword(
 export async function register(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await authMethod.register({
     ...req.body,

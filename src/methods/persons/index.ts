@@ -1,3 +1,4 @@
+import type { TArea, TImportPerson, TPerson } from "~/utils/db";
 import {
   AreaSchema,
   areasModel,
@@ -5,23 +6,18 @@ import {
   InsertPersonSchema,
   PersonSchema,
   personsModel,
-  TArea,
-  TImportPerson,
-  TInsertArea,
-  TPerson,
 } from "~/utils/db";
 import { normalizeString } from "~/utils/normalize-string";
+import type { ServerResult } from "~/utils/validators";
 import {
   GetPersonsSchema,
   ImportExcelSchema,
   PersonIdSchema,
-  ServerResult,
-  TImportExcel,
 } from "~/utils/validators";
 import XLSX from "xlsx";
 
 export async function getPerson(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TPerson>> {
   const { personId } = await PersonIdSchema.parseAsync(input);
 
@@ -38,13 +34,13 @@ export async function getPerson(
         _id: person._id.toString(),
       }),
     };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to query database" };
   }
 }
 
 export async function getPersons(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TPerson[]>> {
   const { areaId, name } = await GetPersonsSchema.parseAsync(input);
   const normalizedName = normalizeString(name);
@@ -79,18 +75,21 @@ export async function getPersons(
       .limit(queryLimit)
       .then((value) =>
         value.map((person) =>
-          PersonSchema.parse({ ...person.toJSON(), _id: person._id.toString() })
-        )
+          PersonSchema.parse({
+            ...person.toJSON(),
+            _id: person._id.toString(),
+          }),
+        ),
       );
 
     return { success: true, data: persons };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to query database" };
   }
 }
 
 export async function addPerson(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TPerson>> {
   const newPerson = await InsertPersonSchema.parseAsync(input);
 
@@ -116,13 +115,13 @@ export async function addPerson(
         _id: insertedPerson._id.toString(),
       }),
     };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to insert person into database" };
   }
 }
 
 export async function addImportPersons(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<{ status: "ok" }>> {
   const { file } = await ImportExcelSchema.parseAsync(input);
 
@@ -139,8 +138,8 @@ export async function addImportPersons(
     }
 
     const excelDataRecord = XLSX.utils.sheet_to_json(
-      firstPage
-    ) as TImportPerson[];
+      firstPage,
+    ) as unknown as TImportPerson[];
     const newPersons = [];
 
     for (const excelRow of excelDataRecord) {
@@ -155,7 +154,7 @@ export async function addImportPersons(
         .then((value) =>
           value
             ? AreaSchema.parse({ ...value.toJSON(), _id: value._id.toString() })
-            : null
+            : null,
         );
       if (!area) {
         return {
@@ -164,20 +163,20 @@ export async function addImportPersons(
         };
       }
 
-      const person = await personsModel.findOne({ rut: excelRow["rut"] });
+      const person = await personsModel.findOne({ rut: excelRow.rut });
       if (person) {
         return {
           success: false,
-          msg: `this person is already on the system ${excelRow["rut"]}`,
+          msg: `this person is already on the system ${excelRow.rut}`,
         };
       }
 
       const organizedData = {
-        rut: excelRow["rut"],
-        name: excelRow["nombres"],
-        nameE: normalizeString(excelRow["nombres"]),
-        lastname: excelRow["apellidos"],
-        lastnameE: normalizeString(excelRow["apellidos"]),
+        rut: excelRow.rut,
+        name: excelRow.nombres,
+        nameE: normalizeString(excelRow.nombres),
+        lastname: excelRow.apellidos,
+        lastnameE: normalizeString(excelRow.apellidos),
         phone: `+${excelRow["telefono casa"]}`,
         insurance: excelRow["seguro medico"],
         address: excelRow["direccion casa"],
@@ -195,19 +194,19 @@ export async function addImportPersons(
     await personsModel.insertMany(newPersons);
 
     return { success: true, data: { status: "ok" } };
-  } catch (error) {
+  } catch {
     return { success: false, msg: "failed to import excel into database" };
   }
 }
 
 export async function editPerson(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TPerson>> {
   const updatedPerson = await PersonSchema.parseAsync(input);
   try {
     const existingPerson = await personsModel.findOne(
       { rut: updatedPerson.rut },
-      "i"
+      "i",
     );
 
     if (!existingPerson) {
@@ -227,13 +226,13 @@ export async function editPerson(
     await existingPerson.updateOne(filteredData);
 
     return { success: true, data: filteredData };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to update person" };
   }
 }
 
 export async function editImportPersons(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<{ status: "ok" }>> {
   const { file } = await ImportExcelSchema.parseAsync(input);
 
@@ -250,8 +249,8 @@ export async function editImportPersons(
     }
 
     const excelDataRecord = XLSX.utils.sheet_to_json(
-      firstPage
-    ) as TImportPerson[];
+      firstPage,
+    ) as unknown as TImportPerson[];
     const updatedPersons = [];
 
     // Haz algo con 'datos', que contiene los datos del archivo XLSX
@@ -268,7 +267,7 @@ export async function editImportPersons(
                   ...value.toJSON(),
                   _id: value._id.toString(),
                 })
-              : null
+              : null,
           );
         if (!area) {
           return {
@@ -279,11 +278,11 @@ export async function editImportPersons(
         markedArea = area;
       }
 
-      const person = await personsModel.findOne({ rut: excelRow["rut"] });
+      const person = await personsModel.findOne({ rut: excelRow.rut });
       if (!person) {
         return {
           success: false,
-          msg: `this person does not exist ${excelRow["rut"]}`,
+          msg: `this person does not exist ${excelRow.rut}`,
         };
       }
       const existingPerson = await PersonSchema.parseAsync({
@@ -293,19 +292,19 @@ export async function editImportPersons(
 
       const organizedData: TPerson = {
         _id: existingPerson._id.toString(),
-        rut: excelRow["rut"],
-        name: excelRow["nombres"] ? excelRow["nombres"] : existingPerson.name,
-        nameE: excelRow["nombres"]
-          ? excelRow["nombres"]
+        rut: excelRow.rut,
+        name: excelRow.nombres ? excelRow.nombres : existingPerson.name,
+        nameE: excelRow.nombres
+          ? excelRow.nombres
               .toLowerCase()
               .normalize("NFD")
               .replace(/[\u0300-\u036f]/g, "")
           : existingPerson.nameE,
-        lastname: excelRow["apellidos"]
-          ? excelRow["apellidos"]
+        lastname: excelRow.apellidos
+          ? excelRow.apellidos
           : existingPerson.lastname,
-        lastnameE: excelRow["apellidos"]
-          ? excelRow["apellidos"]
+        lastnameE: excelRow.apellidos
+          ? excelRow.apellidos
               .toLowerCase()
               .normalize("NFD")
               .replace(/[\u0300-\u036f]/g, "")
@@ -349,13 +348,13 @@ export async function editImportPersons(
     }
 
     return { success: true, data: { status: "ok" } };
-  } catch (error) {
+  } catch {
     return { success: false, msg: "failed to import excel into database" };
   }
 }
 
 export async function deletePerson(
-  input: unknown
+  input: unknown,
 ): Promise<ServerResult<TPerson>> {
   const markedPerson = await PersonSchema.parseAsync(input);
   try {
@@ -372,7 +371,7 @@ export async function deletePerson(
     });
 
     return { success: true, data: markedPerson };
-  } catch (e) {
+  } catch {
     return { success: false, msg: "failed to delete person from database" };
   }
 }

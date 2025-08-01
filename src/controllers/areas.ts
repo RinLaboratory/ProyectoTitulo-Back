@@ -5,7 +5,7 @@ import * as areasMethod from "../methods/areas";
 export async function getAreas(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await areasMethod.getAreas({
     ...req.query,
@@ -20,7 +20,7 @@ export async function getAreas(
 export async function addArea(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await areasMethod.addArea({
     ...req.body,
@@ -35,7 +35,7 @@ export async function addArea(
 export async function editArea(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await areasMethod.editArea({
     ...req.body,
@@ -50,7 +50,7 @@ export async function editArea(
 export async function deleteArea(
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) {
   const response = await areasMethod.deleteArea({
     ...req.body,

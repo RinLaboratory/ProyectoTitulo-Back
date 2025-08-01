@@ -18,8 +18,8 @@ const envValidationSchema = z.object({
           .transform((arr) =>
             arr.length === 0
               ? ["http://localhost:3000", "http://localhost:5001"]
-              : arr
-          )
+              : arr,
+          ),
   ),
   DB_ADDRESS: z.string(),
   SECRET_JWT_SEED: z.string(),
