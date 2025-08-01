@@ -8,7 +8,15 @@ export type THistorySent = z.infer<typeof HistorySentSchema>;
 export const HistorySchema = z.object({
   _id: z.string().regex(/^[0-9a-fA-F]{24}$/),
   personId: z.string(),
-  timestamp: z.date(),
+  timestamp: z.preprocess((val) => {
+    if (typeof val === "string" || val instanceof Date) {
+      const date = new Date(val);
+      if (!isNaN(date.getTime())) {
+        return date;
+      }
+    }
+    return val;
+  }, z.date()),
   sintomas: z.string(),
   tratamiento: z.string(),
   enviado: HistorySentSchema,

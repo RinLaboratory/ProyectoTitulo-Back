@@ -4,7 +4,7 @@ import type { ServerResult } from "~/utils/validators";
 import { PersonIdSchema, idSchema } from "~/utils/validators";
 
 export async function getPersonHistoryInfo(
-  input: unknown,
+  input: unknown
 ): Promise<ServerResult<THistory[]>> {
   const { personId } = await PersonIdSchema.parseAsync(input);
   try {
@@ -16,8 +16,8 @@ export async function getPersonHistoryInfo(
           HistorySchema.parse({
             ...history.toJSON(),
             _id: history._id.toString(),
-          }),
-        ),
+          })
+        )
       );
 
     return { success: true, data: histories };
@@ -27,12 +27,15 @@ export async function getPersonHistoryInfo(
 }
 
 export async function addPersonHistoryInfo(
-  input: unknown,
+  input: unknown
 ): Promise<ServerResult<THistory>> {
   const newHistory = await InsertHistorySchema.parseAsync(input);
 
   try {
-    const insertedHistory = new historiesModel(newHistory);
+    const insertedHistory = new historiesModel({
+      ...newHistory,
+      timestamp: new Date(newHistory.timestamp),
+    });
     await insertedHistory.save();
 
     return {
@@ -49,7 +52,7 @@ export async function addPersonHistoryInfo(
 }
 
 export async function editPersonHistoryInfo(
-  input: unknown,
+  input: unknown
 ): Promise<ServerResult<THistory>> {
   const updatedHistory = await HistorySchema.parseAsync(input);
 
@@ -69,7 +72,7 @@ export async function editPersonHistoryInfo(
 }
 
 export async function deletePersonHistoryInfo(
-  input: unknown,
+  input: unknown
 ): Promise<ServerResult<THistory>> {
   const { _id } = await idSchema.parseAsync(input);
 
