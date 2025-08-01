@@ -12,7 +12,8 @@
     "format:fix": "prettier --check --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit",
     "precommit": "pnpm format:fix && pnpm lint:fix && pnpm typecheck",
-    "with-env": "dotenv -e ./.env --"
+    "with-env": "dotenv -e ./.env --",
+    "db:seed": "python3 ./seeds/import.py"
   },
   "author": "",
   "license": "ISC",
