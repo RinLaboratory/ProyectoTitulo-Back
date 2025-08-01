@@ -1,5 +1,4 @@
 import {
-  AreaSchema,
   areasModel,
   historiesModel,
   PersonSchema,
@@ -30,7 +29,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        }),
+        })
       );
     }
 
@@ -44,7 +43,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        }),
+        })
       );
     }
 
@@ -61,17 +60,9 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
         await PersonSchema.parseAsync({
           ...person?.toJSON(),
           _id: person?._id.toString(),
-        }),
+        })
       );
     }
-
-    const areas = await areasModel
-      .find({})
-      .then((value) =>
-        value.map((area) =>
-          AreaSchema.parse({ ...area.toJSON(), _id: area._id.toString() }),
-        ),
-      );
 
     return {
       success: true,
@@ -79,7 +70,6 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
         atendido: atendido,
         reposo: reposo,
         retirado: retirado,
-        areas: areas,
       },
     };
   } catch (e) {
