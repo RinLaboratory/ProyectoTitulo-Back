@@ -1,5 +1,6 @@
 import z from "zod";
-import type { TArea, TPerson } from "../db";
+import type { TPerson } from "../db";
+import decodeBase64 from "../decode-base64";
 
 export type ServerResult<T> =
   | {
@@ -34,39 +35,54 @@ export const UpdatePasswordSchema = z
 export type TUpdatePassword = z.infer<typeof UpdatePasswordSchema>;
 
 export const GetAreasSchema = z.object({
-  name: z.string(),
+  name: z.string().optional().default(""),
 });
 
 export type TGetAreas = z.infer<typeof GetAreasSchema>;
 
 export const PersonIdSchema = z.object({
-  personId: z.string(),
+  personId: z.string().optional().default(""),
 });
 
 export type TPersonId = z.infer<typeof PersonIdSchema>;
 
 export const GetUsersSchema = z.object({
-  username: z.string(),
+  username: z.string().optional().default(""),
 });
 
 export type TGetUsers = z.infer<typeof GetUsersSchema>;
 
 export const GetPersonsSchema = z.object({
-  name: z.string(),
-  areaId: z.string(),
+  name: z.string().optional().default(""),
+  areaId: z.string().optional().default(""),
 });
 
 export type TGetPersons = z.infer<typeof GetPersonsSchema>;
 
 export const ImportExcelSchema = z.object({
   file: z
-    .instanceof(File)
-    .refine((file) => file.size <= 26214400, "Max file size is 25MB.")
+    .string()
+    .refine(
+      (value) => {
+        return /^data:.*;base64,/.test(value);
+      },
+      { message: "Invalid base64 format." }
+    )
+    .transform((base64) => {
+      const { blob, mimeType } = decodeBase64(base64);
+
+      return new File([blob], "import.xlsx", { type: mimeType });
+    })
+    .refine((file) => file.size <= 26214400, {
+      message: "Max file size is 25MB.",
+    })
     .refine(
       (file) =>
         file.type ===
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      'only excel format ("xlsx") is accepted',
+      {
+        message: 'Only Excel format ("xlsx") is accepted.',
+      }
     ),
 });
 
@@ -84,5 +100,4 @@ export interface DashboardResponse {
   atendido: TPerson[];
   reposo: TPerson[];
   retirado: TPerson[];
-  areas: TArea[];
 }
