@@ -295,19 +295,13 @@ export async function editImportPersons(
         rut: excelRow.rut,
         name: excelRow.nombres ? excelRow.nombres : existingPerson.name,
         nameE: excelRow.nombres
-          ? excelRow.nombres
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+          ? normalizeString(excelRow.nombres)
           : existingPerson.nameE,
         lastname: excelRow.apellidos
           ? excelRow.apellidos
           : existingPerson.lastname,
         lastnameE: excelRow.apellidos
-          ? excelRow.apellidos
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+          ? normalizeString(excelRow.apellidos)
           : existingPerson.lastnameE,
         phone: excelRow["telefono casa"]
           ? `+${excelRow["telefono casa"]}`

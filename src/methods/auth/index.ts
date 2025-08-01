@@ -13,6 +13,7 @@ import {
   UserSchema,
   usersModel,
 } from "~/utils/db";
+import { normalizeString } from "~/utils/normalize-string";
 
 const saltRounds = env.HOW_MANY_HASHES;
 
@@ -113,10 +114,7 @@ export async function register(
     const pass = new passwordsModel({ password: hash });
     await pass.save();
 
-    const b_username = registerData.username
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+    const b_username = normalizeString(registerData.username);
 
     const hashedUserPassword = {
       username: registerData.username,
