@@ -1,4 +1,5 @@
 # ProyectoTitulo
+
 Mi proyecto de titulo para optar a titulo de Ingeniero Civil en Informática.
 
 ## Getting dependencies installed
@@ -51,7 +52,7 @@ Line `92` is the function that python uses to connect to MongoDB, you may adjust
 
 In line `153` is calling this function called `createSuperUser()` that creates the super admin user and inserts it into the db.
 You may remove the `#` to enable this function.
-The default credentials are: 
+The default credentials are:
 
 - Email: `123@123.com`
 - Password: `123`
@@ -69,7 +70,7 @@ To execute this file you may use the following command: `python import.py`
 ## .env.example
 
 - `SECRET_JWT_SEED` is the JWT seed that is used to generate the user token.
-- `JWT_COOKIE_EXPIRES_IN` is the time that the JSONWebToken cookie is going to expire after in days. 
+- `JWT_COOKIE_EXPIRES_IN` is the time that the JSONWebToken cookie is going to expire after in days.
 - `SECRET_JWT_SEED_EXPIRATION_TIME` is the time that the user token is going to expire after. you may use the following format: `<Number><s:m:h:d:mo:y>` example: `5m` equals to `5 minutes`.
 - `SERVER_PORT` is the port where this server is going to bind.
 - `DB_ADDRESS` is the MongoDB database URL, this has to contain the collection name in order to work as the following: `mongodb://localhost:27017/<collection name>`
