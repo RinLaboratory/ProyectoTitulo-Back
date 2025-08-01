@@ -32,7 +32,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
       );
       atendido.push(
         await PersonSchema.parseAsync({
-          ...person,
+          ...person?.toJSON(),
           _id: person?._id.toString(),
         })
       );
@@ -48,7 +48,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
       );
       reposo.push(
         await PersonSchema.parseAsync({
-          ...person,
+          ...person?.toJSON(),
           _id: person?._id.toString(),
         })
       );
@@ -67,7 +67,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
       );
       retirado.push(
         await PersonSchema.parseAsync({
-          ...person,
+          ...person?.toJSON(),
           _id: person?._id.toString(),
         })
       );
@@ -77,7 +77,7 @@ export async function dashboard(): Promise<ServerResult<DashboardResponse>> {
       .find({})
       .then((value) =>
         value.map((area) =>
-          AreaSchema.parse({ ...area, _id: area._id.toString() })
+          AreaSchema.parse({ ...area.toJSON(), _id: area._id.toString() })
         )
       );
 

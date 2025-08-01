@@ -17,7 +17,7 @@ export async function getAreas(input: unknown): Promise<ServerResult<TArea[]>> {
     const areas = await areasModel.find({ value: nameRegex }).then((value) => {
       return value.map((area) => {
         return AreaSchema.parse({
-          ...area,
+          ...area.toJSON(),
           _id: area._id.toString(),
         });
       });
@@ -44,7 +44,7 @@ export async function addArea(input: unknown): Promise<ServerResult<TArea>> {
     }
 
     const defaultArea = await AreaSchema.parseAsync({
-      ..._defaultArea,
+      ..._defaultArea?.toJSON(),
       _id: _defaultArea?._id.toString(),
     });
 
@@ -60,7 +60,7 @@ export async function addArea(input: unknown): Promise<ServerResult<TArea>> {
     return {
       success: true,
       data: await AreaSchema.parseAsync({
-        ...insertedArea,
+        ...insertedArea.toJSON(),
         _id: insertedArea._id.toString(),
       }),
     };
@@ -78,7 +78,7 @@ export async function editArea(input: unknown): Promise<ServerResult<TArea>> {
 
     const _defaultArea = await areasModel.findOne({ value: "default" });
     const defaultArea = await AreaSchema.parseAsync({
-      ..._defaultArea,
+      ..._defaultArea?.toJSON(),
       _id: _defaultArea?._id.toString(),
     });
 

@@ -19,7 +19,13 @@ export async function getCurrentUser(
 
   const user = await usersModel.findById(_id);
 
-  return { success: true, data: await UserSchema.parseAsync(user) };
+  return {
+    success: true,
+    data: await UserSchema.parseAsync({
+      ...user?.toJSON(),
+      _id: user?._id.toString(),
+    }),
+  };
 }
 
 // admin
@@ -36,7 +42,7 @@ export async function getUsers(
     })
     .then((value) =>
       value.map((user) =>
-        UserSchema.parse({ ...user, _id: user._id.toString() })
+        UserSchema.parse({ ...user.toJSON(), _id: user._id.toString() })
       )
     );
 
@@ -80,7 +86,7 @@ export async function editUser(
     return {
       success: true,
       data: await UserSchema.parseAsync({
-        ...existingUser,
+        ...existingUser.toJSON(),
         ...filteredData,
         _id: existingUser._id.toString(),
       }),

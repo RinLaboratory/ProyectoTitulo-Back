@@ -54,7 +54,7 @@ export async function getPersons(
   try {
     const _defaultArea = await areasModel.findOne({ value: "default" });
     const defaultArea = await AreaSchema.parseAsync({
-      ..._defaultArea,
+      ..._defaultArea?.toJSON(),
       _id: _defaultArea?._id.toString(),
     });
 
@@ -80,7 +80,7 @@ export async function getPersons(
       .limit(queryLimit)
       .then((value) =>
         value.map((person) =>
-          PersonSchema.parse({ ...person, _id: person._id.toString() })
+          PersonSchema.parse({ ...person.toJSON(), _id: person._id.toString() })
         )
       );
 
@@ -113,7 +113,7 @@ export async function addPerson(
     return {
       success: true,
       data: await PersonSchema.parseAsync({
-        ...insertedPerson,
+        ...insertedPerson.toJSON(),
         _id: insertedPerson._id.toString(),
       }),
     };
@@ -155,7 +155,7 @@ export async function addImportPersons(
         .findOne({ value: valueRegex })
         .then((value) =>
           value
-            ? AreaSchema.parse({ ...value, _id: value._id.toString() })
+            ? AreaSchema.parse({ ...value.toJSON(), _id: value._id.toString() })
             : null
         );
       if (!area) {
@@ -217,7 +217,7 @@ export async function editPerson(
 
     const filteredData = {
       ...(await AreaSchema.parseAsync({
-        ...existingPerson,
+        ...existingPerson.toJSON(),
         _id: existingPerson._id.toString(),
       })),
       ...updatedPerson,
@@ -265,7 +265,10 @@ export async function editImportPersons(
           .findOne({ value: valueRegex })
           .then((value) =>
             value
-              ? AreaSchema.parse({ ...value, _id: value._id.toString() })
+              ? AreaSchema.parse({
+                  ...value.toJSON(),
+                  _id: value._id.toString(),
+                })
               : null
           );
         if (!area) {
@@ -285,7 +288,7 @@ export async function editImportPersons(
         };
       }
       const existingPerson = await PersonSchema.parseAsync({
-        ...person,
+        ...person.toJSON(),
         _id: person._id.toString(),
       });
 

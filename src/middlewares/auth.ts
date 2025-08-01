@@ -22,7 +22,7 @@ export async function authenticationMiddleware(
     const user = await usersModel.findById(uuid);
     if (!user) return res.status(401).send("unauthorized");
     const userData = await UserSchema.parseAsync({
-      ...user,
+      ...user.toJSON(),
       _id: user._id.toString(),
     });
 

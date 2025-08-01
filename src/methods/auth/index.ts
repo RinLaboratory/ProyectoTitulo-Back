@@ -32,7 +32,7 @@ export async function login(input: unknown): Promise<
   }
 
   const userData = await UserSchema.parseAsync({
-    ...user.toObject(),
+    ...user.toJSON(),
     _id: user._id.toString(),
   });
 
@@ -131,7 +131,7 @@ export async function register(
 
     insertedUser.push(
       await UserSchema.parseAsync({
-        ...user,
+        ...user.toJSON(),
         _id: user._id.toString(),
       })
     );

@@ -4,11 +4,7 @@ import {
   InsertHistorySchema,
   THistory,
 } from "~/utils/db";
-import {
-  PersonIdSchema,
-  idSchema,
-  ServerResult,
-} from "~/utils/validators";
+import { PersonIdSchema, idSchema, ServerResult } from "~/utils/validators";
 
 export async function getPersonHistoryInfo(
   input: unknown
@@ -20,7 +16,10 @@ export async function getPersonHistoryInfo(
       .sort({ timestamp: -1 })
       .then((value) =>
         value.map((history) =>
-          HistorySchema.parse({ ...history, _id: history._id.toString() })
+          HistorySchema.parse({
+            ...history.toJSON(),
+            _id: history._id.toString(),
+          })
         )
       );
 
@@ -42,7 +41,7 @@ export async function addPersonHistoryInfo(
     return {
       success: true,
       data: await HistorySchema.parseAsync({
-        ...insertedHistory,
+        ...insertedHistory.toJSON(),
         _id: insertedHistory._id.toString(),
       }),
     };
@@ -88,7 +87,7 @@ export async function deletePersonHistoryInfo(
     return {
       success: true,
       data: await HistorySchema.parseAsync({
-        ...existingHistory,
+        ...existingHistory.toJSON(),
         _id: existingHistory._id.toString(),
       }),
     };
