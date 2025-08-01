@@ -106,15 +106,15 @@ export async function editArea(input: unknown): Promise<ServerResult<TArea>> {
           : editedArea.nextId,
     };
 
-    const findDocument = await areasModel.findById(editedArea._id);
-    if (!findDocument) {
+    const areaToUpdate = await areasModel.findById(editedArea._id);
+    if (!areaToUpdate) {
       return {
         success: false,
         msg: "failed to find the area that is being updated",
       };
     }
 
-    await findDocument.updateOne(filteredData);
+    await areaToUpdate.updateOne(filteredData);
 
     return { success: true, data: filteredData };
   } catch (e) {
