@@ -8,7 +8,7 @@ const usersRouter = Router();
 
 usersRouter.use(checkUserMiddleware());
 
-usersRouter.get("/:id", usersController.getCurrentUser);
+usersRouter.get("/current", usersController.getCurrentUser);
 
 // admin
 usersRouter.use(checkAdminMiddleware());
