@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "precommit": "pnpm format:fix && pnpm lint:fix && pnpm typecheck",
     "with-env": "dotenv -e ./.env --",
-    "db:seed": "python3 ./seeds/import.py"
+    "db:seed": "python3 ./seeds/import.py",
+    "py:setup": "pip install pymongo"
   },
   "author": "",
   "license": "ISC",
