@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 /** @type {import('typescript-eslint').Config} */
 export default [
   {
-    ignores: [],
+    ignores: ["dist/**", "**/*.mjs", "eslint.config.mjs", "**/*.js"],
   },
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
@@ -33,13 +33,6 @@ export default [
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
-      // TypeError: context.getAncestors is not a function
-      "@next/next/no-duplicate-head": "off",
-    },
-    languageOptions: {
-      globals: {
-        React: "writable",
-      },
     },
   },
   {
