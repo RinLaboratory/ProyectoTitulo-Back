@@ -94,4 +94,4 @@ This project uses:
 - [bcrypt](https://www.npmjs.com/package/bcrypt)
 - [JSONWebToken](https://www.npmjs.com/package/jsonwebtoken)
 - [mongoose](https://mongoosejs.com/)
-- [xlsx](https://www.npmjs.com/package/xlsx) - This package might say that has a exploit, but only administrator user has access to the modules related to this package.
+- [xlsx](https://git.sheetjs.com/sheetjs/sheetjs)
