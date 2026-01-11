@@ -15,14 +15,16 @@ export async function getAreas(input: unknown): Promise<ServerResult<TArea[]>> {
   const nameRegex = new RegExp(normalizedName);
 
   try {
-    const areas = await areasModel.find({ value: nameRegex }).then((value) => {
-      return value.map((area) => {
-        return AreaSchema.parse({
-          ...area.toJSON(),
-          _id: area._id.toString(),
+    const areas = await areasModel
+      .find(normalizedName ? { value: nameRegex } : {})
+      .then((value) => {
+        return value.map((area) => {
+          return AreaSchema.parse({
+            ...area.toJSON(),
+            _id: area._id.toString(),
+          });
         });
       });
-    });
 
     return { success: true, data: areas };
   } catch {
