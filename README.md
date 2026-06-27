@@ -37,10 +37,36 @@ pnpm build
 
 ## Getting the production server running
 
+### server (bash)
 Use the following command to run the production server:
 
 ```bash
 pnpm start
+```
+
+### server (Docker)
+
+#### Local build
+
+To locally compile the development server, you will use the following command:
+
+```bash
+docker build -t proyecto-titulo .
+```
+
+#### Run server
+
+To pass the environment variables to the docker command, you must insert them using the following pattern:
+
+```bash
+-e ENV_VAR_KEY=value
+-e ANOTHER_ENV_VAR_KEY=value
+```
+
+To run production server you will use the following command, replacing the environment variables values with your config:
+
+```bash
+docker run --rm -p 5001:5001 -e NODE_ENV=production -e SECRET_JWT_SEED=super-long-and-secret-jwt-shared-with-backend -e JWT_COOKIE_EXPIRES_IN=10 -e SECRET_JWT_SEED_EXPIRATION_TIME=5m -e SERVER_PORT=5001 -e DB_ADDRESS=mongodb://localhost:27017/COLECCIÓN -e URL_FRONTEND=http://localhost:3000 -e HOW_MANY_HASHES=10 -e ALLOWED_CORS_ORIGINS=http://localhost:3000,http://localhost:5001
 ```
 
 This server will bind to port `8000`, here is an example: [http://localhost:8000](http://localhost:8000) the Frontend server will start to query this production server.
